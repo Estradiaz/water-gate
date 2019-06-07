@@ -4,5 +4,10 @@
   "main": "index.js",
   "repository": "https://github.com/Estradiaz/water-gate.git",
   "author": "Samuel Ueberle <s.ueberle@fu-berlin.de>",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nuxt": "^2.8.1",
+    "ts-node": "^8.2.0"
+  }
 }
