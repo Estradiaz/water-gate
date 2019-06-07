@@ -12,6 +12,17 @@
     "ws": "^7.0.0"
   },
   "devDependencies": {
-    "@types/ws": "^6.0.1"
+    "@nuxt/typescript": "^2.8.1",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "@types/ws": "^6.0.1",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "dev-debug": "node --debug ./node_modules/.bin/nuxt",
+    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test:watch": "mocha --require ts-node/register test/**/*.ts --watch"
   }
 }
