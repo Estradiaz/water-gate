@@ -1,0 +1,8 @@
+{
+  "name": "water-gate",
+  "version": "0.0.1",
+  "main": "index.js",
+  "repository": "https://github.com/Estradiaz/water-gate.git",
+  "author": "Samuel Ueberle <s.ueberle@fu-berlin.de>",
+  "license": "MIT"
+}
