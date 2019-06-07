@@ -1,7 +1,7 @@
 import { IDevice as IAction } from "~/interfaces";
 import Store from ".";
 
-export default class ActionStore extends Store<IAction>{
+export default class DeviceStore extends Store<IAction>{
 
     readSync(): IAction | undefined{
 
