@@ -1,5 +1,6 @@
 import { IDevice as IAction } from "~/interfaces";
 import Store from ".";
+import { Server } from "ws";
 
 export default class DeviceStore extends Store<IAction>{
 
@@ -13,11 +14,11 @@ export default class DeviceStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        
+        super.write(values);  
     } 
     append(value: IAction): void{
 
-        
-    } 
+        super.append(value);
+    }
     
 }

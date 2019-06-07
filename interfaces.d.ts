@@ -1,3 +1,11 @@
+export type BroadcastStoreUpdateMsg<T> = {
+    type: 'append'
+    data: T
+} | {
+    type: 'write'
+    data: T[]
+}
+
 export interface IDevice {
 
     name: string

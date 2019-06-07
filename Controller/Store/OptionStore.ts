@@ -1,6 +1,7 @@
 
 import { IOption as IAction } from "~/interfaces";
 import Store from ".";
+import { Server } from "ws";
 
 export default class OptionStore extends Store<IAction>{
 
@@ -14,11 +15,11 @@ export default class OptionStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        
+        super.write(values);  
     } 
     append(value: IAction): void{
 
-        
-    } 
+        super.append(value);
+    }
     
 }
