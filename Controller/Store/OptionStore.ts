@@ -1,6 +1,6 @@
 
 import { IOption as IAction } from "~/interfaces";
-import Store from ".";
+import Store from "./Store";
 import { Server } from "ws";
 
 export default class OptionStore extends Store<IAction>{

@@ -1,5 +1,5 @@
 import { IDevice as IAction } from "~/interfaces";
-import Store from ".";
+import Store from "./Store";
 import { Server } from "ws";
 
 export default class DeviceStore extends Store<IAction>{

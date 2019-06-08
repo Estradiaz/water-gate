@@ -1,5 +1,5 @@
 import { IAction } from "~/interfaces";
-import Store from ".";
+import Store from "./Store";
 import { Server } from 'ws'
 
 
