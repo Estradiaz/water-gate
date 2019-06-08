@@ -23,3 +23,10 @@ export default class OptionStore extends Store<IAction>{
     }
     
 }
+export function validOption(obj: any){
+
+    return (obj
+    && obj.hasOwnProperty('name')    
+    && obj.hasOwnProperty('value')    
+    ) || false
+}

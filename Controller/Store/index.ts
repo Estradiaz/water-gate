@@ -15,7 +15,6 @@ export function StoreProxy<T>(store: Store<T>){
     
         get: function(target, property):T[]{
 
-            console.log("get element", target)
             if(target.length === 0){
 
                 target = store.readAllSync()
@@ -24,7 +23,6 @@ export function StoreProxy<T>(store: Store<T>){
         },
         set: function(target, property, value, reciever){
 
-            console.log(target, property, value, reciever)
             target[property] = value
             store.write(value)
             return true;

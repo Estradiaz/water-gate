@@ -23,3 +23,12 @@ export default class ActionStore extends Store<IAction>{
     } 
     
 }
+
+export function validAction(obj: any){
+
+    return (obj
+    && obj.hasOwnProperty('name')
+    && obj.hasOwnProperty('device')
+    && obj.hasOwnProperty('method'))
+    || false
+}

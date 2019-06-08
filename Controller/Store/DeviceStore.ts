@@ -14,12 +14,18 @@ export default class DeviceStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        console.log("deviceStore write", values)
-        super.write(values);  
+        super.write(values);
     } 
     append(value: IAction): void{
 
         super.append(value);
     }
     
+}
+export function validDevice(obj: any){
+    return (obj 
+    && obj.hasOwnProperty('name')
+    && obj.hasOwnProperty('on')
+    && obj.hasOwnProperty('off'))
+    || false
 }
