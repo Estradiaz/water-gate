@@ -11,7 +11,7 @@ export default class Store<T> implements IPersistence<T>{
 
         this.wsServer.clients.forEach(client => {
 
-            client.send(msg)
+            client.send(JSON.stringify(msg))
         })
     }
     readSync(): T | undefined{

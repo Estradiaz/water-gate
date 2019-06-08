@@ -14,6 +14,7 @@ export default class DeviceStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
+        console.log("deviceStore write", values)
         super.write(values);  
     } 
     append(value: IAction): void{

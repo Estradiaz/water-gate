@@ -1,12 +1,13 @@
 import { StoreProxy, ActionStore, DeviceStore, OptionStore } from "./Store";
 import { Server } from "ws";
+import { IOption, IDevice, IAction } from "~/interfaces";
 
 
 export default (runActions: Function, wsServer: Server) => new class Controller{
 
-    private options
-    private devices
-    private actions
+    options: IOption[]
+    devices: IDevice[]
+    actions: IAction[]
 
     private loopTimer: number | undefined
     loop(t: number){
@@ -20,9 +21,9 @@ export default (runActions: Function, wsServer: Server) => new class Controller{
         this.loopTimer = undefined
     }
     constructor(wsServer: Server){
-        this.options = StoreProxy(new OptionStore(wsServer))
-        this.devices = StoreProxy(new DeviceStore(wsServer))
-        this.actions = StoreProxy(new ActionStore(wsServer))
+        this.options = StoreProxy<IOption>(new OptionStore(wsServer))
+        this.devices = StoreProxy<IDevice>(new DeviceStore(wsServer))
+        this.actions = StoreProxy<IAction>(new ActionStore(wsServer))
         this.loop(Date.now())
     }
 }(wsServer)

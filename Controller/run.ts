@@ -7,15 +7,17 @@ const wsServer = new WS.Server({
 })
 wsServer.on('connection', () => {
 
-    console.log('wsServer')
+    console.log('wsServer listens on 3001')
 })
 const ctrl = Controller(function(ctrl: any, t: number){
-
     // console.log('action to ground-controll', t - Date.now(), t)
-
+    
 }, wsServer)
+export type Controller = typeof ctrl;
 
-Api.listen(3002, 'localhost', () => {
+Api(ctrl).listen(3002, 'localhost', () => {
 
     console.log('controller api listens on 3002')
 })
+
+export default ctrl

@@ -9,9 +9,11 @@ export type BroadcastStoreUpdateMsg<T> = {
 export interface IDevice {
 
     name: string
-    on(): Promise<boolean>
-    off(): Promise<boolean>
-    uniquieHash: string
+    on: string,
+    off: string
+    // on(): Promise<boolean>
+    // off(): Promise<boolean>
+    uniquieHash?: string
 }
 
 export type ActionName = string
