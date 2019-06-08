@@ -1,6 +1,7 @@
 import { StoreProxy, ActionStore, DeviceStore, OptionStore } from "./Store";
 import { Server } from "ws";
 
+
 export default (runActions: Function, wsServer: Server) => new class Controller{
 
     private options
@@ -10,12 +11,12 @@ export default (runActions: Function, wsServer: Server) => new class Controller{
     private loopTimer: number | undefined
     loop(t: number){
 
-        this.loopTimer = this.loopTimer || setInterval(this.loop, 1000, Date.now())
-        runActions(t).bind(this)
+        this.loopTimer = this.loopTimer || setInterval(() => this.loop(Date.now()), 1000) as any as number
+        runActions(this, t)
     }
     stop(){
 
-        clearInterval(this.loopTimer);
+        this.loopTimer && clearInterval(this.loopTimer);
         this.loopTimer = undefined
     }
     constructor(wsServer: Server){
