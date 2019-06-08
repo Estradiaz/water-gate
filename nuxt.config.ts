@@ -7,8 +7,9 @@ const config: NuxtConfiguration = {
             src: '@/plugins/serverReady/index.ts',
             mode: 'server'
         }
+    ],
+    serverMiddleware: [
     ]
 }
-
 
 export default config
