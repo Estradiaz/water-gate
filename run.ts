@@ -1,4 +1,14 @@
 import { spawn, ChildProcess } from 'child_process'
+import minimist from 'minimist'
+
+const args = minimist(process.argv.slice(2), {
+  string: [],
+  boolean: ['test'],
+  alias: {
+    t: 'test'
+  }
+})
+process.env.test = args.test
 
 const cp: ChildProcess[] = []
 WebServer: {
@@ -74,7 +84,7 @@ process.stdin.on('data', (data) => {
 
   if(/^exit/.test(data)){
 
-    spawn("start", ["cmd.exe","/c","exit.bat"],{
+    spawn("cmd.exe", ["WaterGate - kill", "/c", "taskkill /FI", '"WINDOWTITLE eq WaterGate*"', "/f", "/t"],{
       windowsHide: false,
       shell: true,
       detached: true,
@@ -92,7 +102,7 @@ process.stdin.on('data', (data) => {
   }
   if(/^test/.test(data)){
 
-    spawn("cmd.exe", ["kill", "/c", "taskkill /FI", '"WINDOWTITLE eq WaterGate - Test*"', "/f", "/t"], {
+    spawn("cmd.exe", ["WaterGate - kill", "/c", "taskkill /FI", '"WINDOWTITLE eq WaterGate - Test*"', "/f", "/t"], {
       shell: true,
       windowsHide: false,
       detached: true
