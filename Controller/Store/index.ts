@@ -24,7 +24,8 @@ export function StoreProxy<T>(store: Store<T>){
         set: function(target, property, value, reciever){
 
             target[property] = value
-            store.write(value)
+            // @ts-ignore
+            store.write(value, null)
             return true;
         }
     })

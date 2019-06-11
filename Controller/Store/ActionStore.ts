@@ -15,12 +15,12 @@ export default class ActionStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        super.write(values);  
+        super.write(values, 'action');  
     } 
     append(value: IAction): void{
 
-        super.append(value);
-    } 
+        super.append(value, 'action');
+    }
     
 }
 

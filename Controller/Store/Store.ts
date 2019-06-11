@@ -1,5 +1,7 @@
-import { IPersistence, BroadcastStoreUpdateMsg } from "~/interfaces";
+import { IPersistence, BroadcastStoreUpdateMsg, IAction } from "~/interfaces";
 import { Server } from "ws";
+import { ValidStore } from "../Api";
+
 
 export default class Store<T> implements IPersistence<T>{
 
@@ -7,7 +9,7 @@ export default class Store<T> implements IPersistence<T>{
     constructor(wsServer: Server){
         this.wsServer = wsServer
     }
-    broadCast(msg: BroadcastStoreUpdateMsg<T>){
+    broadCast(msg: BroadcastStoreUpdateMsg){
 
         this.wsServer.clients.forEach(client => {
 
@@ -22,17 +24,23 @@ export default class Store<T> implements IPersistence<T>{
 
         return []
     }
-    write(values: T[]): void{
+    write(values: T[], store: ValidStore): void{
 
         this.broadCast({
             type: 'write',
+            //@ts-ignore
+            store: store,
+            //@ts-ignore
             data: values
         })
     } 
-    append(value: T): void{
-
+    append(value: T, store: ValidStore): void{
+        
         this.broadCast({
             type: 'append',
+            //@ts-ignore
+            store: store,
+            //@ts-ignore
             data: value
         })
     } 

@@ -15,11 +15,11 @@ export default class OptionStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        super.write(values);  
+        super.write(values, 'option');  
     } 
     append(value: IAction): void{
 
-        super.append(value);
+        super.append(value, 'option');
     }
     
 }

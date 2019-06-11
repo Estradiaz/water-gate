@@ -14,11 +14,11 @@ export default class DeviceStore extends Store<IAction>{
     }
     write(values: IAction[]): void{
 
-        super.write(values);
+        super.write(values, 'device');
     } 
     append(value: IAction): void{
 
-        super.append(value);
+        super.append(value, 'device');
     }
     
 }

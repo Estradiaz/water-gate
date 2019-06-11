@@ -1,9 +1,29 @@
-export type BroadcastStoreUpdateMsg<T> = {
+import { ValidStore } from "./Controller/Api";
+
+export type BroadcastStoreUpdateMsg = {
+    store: 'action'
     type: 'append'
-    data: T
+    data: IAction
 } | {
+    store: 'action'
     type: 'write'
-    data: T[]
+    data: IAction[]
+} | {
+    store: 'device'
+    type: 'append'
+    data: IDevice
+} | {
+    store: 'device'
+    type: 'write'
+    data: IDevice[]
+} | {
+    store: 'option'
+    type: 'append'
+    data: IOption
+} | {
+    store: 'option'
+    type: 'write'
+    data: IOption[]
 }
 
 export interface IDevice {
@@ -43,11 +63,16 @@ export interface IOption{
 export interface IPersistence<T> {
 
     // write(obj: T): Promise<string>
-    write(obj: T[]): void
-    append(obj: T): void
+    write(obj: T[], store: ValidStore): void
+    append(obj: T, store: ValidStore): void
     // read(key: string): Promise<T>
     readSync(key: string): T | undefined
     // readAll(): Promise<T[]>
     readAllSync(): T[]
 }
 
+export type RootState = {
+    actions: IAction[]
+    devices: IDevice[]
+    options: IOption[]
+}
