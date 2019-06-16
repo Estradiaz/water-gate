@@ -1,6 +1,7 @@
 import { spawn, ChildProcess } from 'child_process'
 import minimist from 'minimist'
 
+console.log("ts-run")
 const args = minimist(process.argv.slice(2), {
   string: [],
   boolean: ['test'],

@@ -6,6 +6,8 @@
   "author": "Samuel Ueberle <s.ueberle@fu-berlin.de>",
   "license": "MIT",
   "dependencies": {
+    "@nuxtjs/vuetify": "^0.5.6",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "nuxt": "^2.8.1",
     "ts-node": "^8.2.0",
@@ -14,20 +16,23 @@
   "devDependencies": {
     "@nuxt/typescript": "^2.8.1",
     "@types/chai": "^4.1.7",
+    "@types/cors": "^2.8.5",
     "@types/mocha": "^5.2.7",
     "@types/ws": "^6.0.1",
     "axios": "^0.19.0",
     "chai": "^4.2.0",
+    "minimist": "^1.2.0",
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "vue-property-decorator": "^8.1.1"
   },
   "scripts": {
-    "app": "ts-node run.ts",
-    "ctrl": "nodemon --watch 'Controller/**/*.ts' --exec ts-node ./Controller/run.ts",
-    "mock": "ts-node ./MockDevice/run.ts",
+    "app": "ts-node -P cli.tsconfig.json run.ts",
+    "ctrl": "nodemon -e ts --watch 'Controller/**/*.ts' --exec ts-node -P cli.tsconfig.json ./Controller/run.ts",
+    "mock": "ts-node -P cli.tsconfig.json ./MockDevice/run.ts",
     "server": "nuxt",
     "dev-debug": "node --debug ./node_modules/.bin/nuxt",
-    "test": "mocha --require ts-node/register test/**/*.ts",
-    "test:watch": "mocha --require ts-node/register test/**/*.ts --watch --recursive"
+    "test": "TS_NODE_PROJECT='cli.tsconfig.json' mocha --require ts-node/register test/**/*.ts -P -P cli.tsconfig.json",
+    "test:watch": "mocha --require ts-node/register test/**/*.ts --watch-extensions ts --watch --recursive"
   }
 }

@@ -11,7 +11,7 @@
         @del="del"
         @update="update"
     />
-    <v-flex xs4>
+    <v-flex xs12 sm6 md4 lg4>
         <v-card>
             <v-card-text>
                 
@@ -47,59 +47,14 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import {Vue, Component} from 'vue-property-decorator'
 import axios from 'axios'
 import DeviceComponent from '@/components/Device/index.vue'
 import { IDevice, RootState } from '../../../interfaces';
-export default Vue.extend({
+@Component<Devices>({
+
     components: {
         DeviceComponent
-    },
-    data(){
-        return {
-
-            deviceName: "",
-            deviceOn: "",
-            deviceOff: "",
-        }
-    },
-    computed: {
-        devices: function(){
-
-            return (this.$store.state as RootState).devices
-        }
-    },
-    methods: {
-
-
-        del: async function(id: number){
-
-            this.devices = (await axios.delete('http://localhost:3002/devices/')).data.slice()
-        },
-        update: async function(device: IDevice){
-
-            await axios.put('http://localhost:3002/devices/', {
-                name: device.name, 
-                on: device.on,
-                off: device.off,
-                // id: device.id
-            })
-        },
-        add: async function(){
-
-            let name = this.deviceName
-            this.deviceName = "";
-            let on = this.deviceOn;
-            this.deviceOn = "";
-            let off = this.deviceOff;
-            this.deviceOff = "";
-    
-            let response = await axios.put('http://localhost:3002/devices/', {
-                name,
-                on,
-                off
-            })
-        }
     },
     async asyncData({store}){
 
@@ -111,4 +66,53 @@ export default Vue.extend({
         )
     }
 })
+export default class Devices extends Vue{
+    deviceName: string = ""
+    deviceOn: string = ""
+    deviceOff: string = ""    
+    
+    
+    get devices(){
+
+        return (this.$store.state as RootState).devices.map(device => Object.assign({}, device))
+    }
+    set devices(devices: IDevice[]){
+
+        console.log(devices)
+    }
+
+    async del(id: number){
+
+        this.devices = (await axios.delete(`http://localhost:3002/device/${id}`)).data.slice()
+    }
+    
+    async update(device: IDevice){
+
+        console.log('update', device)
+        axios.put('http://localhost:3002/device/', {
+            name: device.name, 
+            on: device.on,
+            off: device.off,
+            _id: device._id
+        })
+    }
+    async add(){
+
+        console.log('add')
+        let name = this.deviceName
+        this.deviceName = "";
+        let on = this.deviceOn;
+        this.deviceOn = "";
+        let off = this.deviceOff;
+        this.deviceOff = "";
+        console.log("add", {name, on, off})
+
+        let response = await axios.put('http://localhost:3002/device/', {
+            name,
+            on,
+            off
+        })
+    }
+    
+}
 </script>

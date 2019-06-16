@@ -26,14 +26,19 @@ export type BroadcastStoreUpdateMsg = {
     data: IOption[]
 }
 
-export interface IDevice {
+export interface IStoreElement {
+    name: string,
+    _id?: string,
+}
+
+export interface IDevice extends IStoreElement {
 
     name: string
     on: string,
     off: string
     // on(): Promise<boolean>
     // off(): Promise<boolean>
-    uniquieHash?: string
+    _id?: string
 }
 
 export type ActionName = string
@@ -46,7 +51,7 @@ export type ActionTrigger = {
     name: ActionName
     delta: number
 }
-export interface IAction {
+export interface IAction extends IStoreElement{
 
     name: ActionName
     device: IDevice

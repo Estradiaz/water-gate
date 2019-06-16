@@ -2,14 +2,10 @@ import NuxtConfiguration from '@nuxt/config'
 
 const config: NuxtConfiguration = {
     
-    plugins: [
-        {
-            src: '@/plugins/serverReady/index.ts',
-            mode: 'server'
-        }
-    ],
-    serverMiddleware: [
-    ]
+    modules: [
+        '@nuxtjs/vuetify'
+      ],
+    
 }
 
 export default config

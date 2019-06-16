@@ -1,5 +1,5 @@
 <template>
-    <v-flex xs4 class="ma-3">
+    <v-flex xs12 sm4 md4 class="ma-3">
         <v-card>
             <v-card-text>
                 <v-form>

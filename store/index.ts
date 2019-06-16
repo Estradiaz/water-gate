@@ -18,12 +18,17 @@ export const actions: ActionTree<RootState, RootState> = {
         })
         
         ws
+        .on('open', ( code => {
+
+            console.log('open')
+        }))
         .on('close', ( code => {
 
 
         }))
         .on('message', (msg: string) => {
 
+            console.log('message', msg)
             try {
 
                 const data: BroadcastStoreUpdateMsg = JSON.parse(msg);

@@ -5,23 +5,25 @@
             :key="action.name"
             :action.sync="action"
         />
+        <v-flex>
+            <v-text-field
+                name="name"
+                label="Name"
+                v-model="actionName"
+            ></v-text-field>
+        </v-flex>
     </v-layout>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import {Vue, Component} from 'vue-property-decorator'
 import Action from '@/components/Action/index.vue'
 import Axios from 'axios';
 import { RootState } from '../../../interfaces';
-export default Vue.extend({
+@Component<Actions>({
+
     components: {
         Action
-    },
-    computed: {
-        actions: function(){
-
-            return (this.$store.state as RootState).actions
-        }
     },
     async asyncData({store}){
 
@@ -31,4 +33,9 @@ export default Vue.extend({
         )
     }
 })
+export default class Actions extends Vue{
+    get actions(){
+        return (this.$store.state as RootState).actions
+    }
+}
 </script>

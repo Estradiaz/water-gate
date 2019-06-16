@@ -1,8 +1,10 @@
 import express, {Request, Response} from 'express';
+import cors from 'cors';
 import { Controller } from '../run';
 import { validAction } from '../Store/ActionStore';
 import { validOption } from '../Store/OptionStore';
 import { validDevice } from '../Store/DeviceStore';
+import { IStoreElement } from '~/interfaces';
 
 export type ValidStore = 'action' | 'device' | 'option'
 const validStores: ValidStore[] = [
@@ -32,12 +34,17 @@ function validBody(req: Request){
 export default function (ctrl: Controller){
 
     const api = express();
+    api.use(cors({
+        origin: [
+            /localhost/
+        ]
+    }))
     api.use(express.urlencoded({extended: true}));
     api.use(express.json())
     
     api.delete('/:store', (req, res) => {
 
-        console.log(req.params.store, req.body)
+        console.log("delete", req.params.store, req.body)
         if(!validStores.includes(req.params.store)){
 
             console.log('store invalid delete', req.params.store)
@@ -51,10 +58,10 @@ export default function (ctrl: Controller){
             return ;
         }
 
-        const device = req.body
+        const device: IStoreElement = req.body
         let index = ctrl[req.params.store + 's'].findIndex(_device => {
             
-            return _device.name === device.name 
+            return _device._id === device._id 
             // && _device.off === device.off
             // && _device.on === device.on
         })
@@ -70,6 +77,7 @@ export default function (ctrl: Controller){
     })
     api.put('/:store', (req, res) => {
     
+        console.log(req.body, req.params)
         if(!validStores.includes(req.params.store)){
 
             console.log('store invalid delete', req.params.store)
@@ -82,15 +90,17 @@ export default function (ctrl: Controller){
             res.status(404).send()
             return ;
         }
-        const device = req.body
+        const device: IStoreElement = req.body
         let index = ctrl[req.params.store + 's'].findIndex(_device => {
 
-            return _device.name === device.name 
+            return _device._id === device._id 
             // && _device.off === device.off
             // && _device.on === device.on
         })
+        console.log(index)
         if(index === -1){
 
+            device._id = Date.now() + "";
             ctrl[req.params.store + 's'].push(device)
         } else {
 
