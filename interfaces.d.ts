@@ -41,7 +41,7 @@ export type BroadcastStoreUpdateMsg = {
 
 export interface IStoreElement {
     name: string,
-    _id?: string,
+    _id: string,
 }
 
 export interface IDevice extends IStoreElement {
@@ -51,7 +51,6 @@ export interface IDevice extends IStoreElement {
     off: string
     // on(): Promise<boolean>
     // off(): Promise<boolean>
-    _id?: string
 }
 
 export type ActionName = string
@@ -72,7 +71,7 @@ export interface IAction extends IStoreElement{
     interval?: ActionInterval
     trigger?: ActionTrigger[]
 }
-export interface IOption{
+export interface IOption extends IStoreElement{
 
     name: string
     value: any
