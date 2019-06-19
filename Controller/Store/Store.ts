@@ -1,13 +1,16 @@
-import { IPersistence, BroadcastStoreUpdateMsg, IAction } from "~/interfaces";
+import { IPersistence, BroadcastStoreUpdateMsg, IAction, IControllerFS, IStoreElement } from "~/interfaces";
 import { Server } from "ws";
 import { ValidStore } from "../Api";
+import fs from 'Controller/FS'
 
 
-export default class Store<T> implements IPersistence<T>{
+export default class Store<T extends IStoreElement> implements IPersistence<T>{
 
-    private wsServer
-    constructor(wsServer: Server){
+    private wsServer: Server
+    private fs: IControllerFS
+    constructor(wsServer: Server, fs: IControllerFS){
         this.wsServer = wsServer
+        this.fs = fs
     }
     broadCast(msg: BroadcastStoreUpdateMsg){
 
@@ -18,11 +21,13 @@ export default class Store<T> implements IPersistence<T>{
     }
     readSync(): T | undefined{
 
-        return undefined
+
+        // return this.fs.readSync();
+        return ;
     }
     readAllSync(): T[]{
 
-        return []
+        return this.fs.readAllSync() as T[];
     }
     write(values: T[], store: ValidStore): void{
 
@@ -33,6 +38,7 @@ export default class Store<T> implements IPersistence<T>{
             //@ts-ignore
             data: values
         })
+        this.fs.write(values, store)
     } 
     append(value: T, store: ValidStore): void{
         
@@ -43,6 +49,7 @@ export default class Store<T> implements IPersistence<T>{
             //@ts-ignore
             data: value
         })
+        this.fs.append(value, store)
     } 
 }
 
