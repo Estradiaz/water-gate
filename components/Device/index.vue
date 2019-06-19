@@ -22,7 +22,7 @@
             </v-card-text>
             <v-card-actions
             >
-                <v-btn @click="del(device.id)">
+                <v-btn @click="del(device)">
                     Delete
                 </v-btn>
                 <v-btn @click="update(device)">
