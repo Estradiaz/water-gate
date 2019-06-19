@@ -74,16 +74,18 @@ export default class Devices extends Vue{
     
     get devices(){
 
+        console.log("state",this.$store.state)
         return (this.$store.state as RootState).devices.map(device => Object.assign({}, device))
     }
     set devices(devices: IDevice[]){
 
-        console.log(devices)
+        this.$store.commit('writeDevices', devices)
     }
 
-    async del(id: number){
+    async del(device: IDevice){
 
-        this.devices = (await axios.delete(`http://localhost:3002/device/${id}`)).data.slice()
+        console.log("del", device)
+        this.devices = (await axios.delete(`http://localhost:3002/device/`, {data: device})).data.slice()
     }
     
     async update(device: IDevice){
