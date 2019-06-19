@@ -1,15 +1,15 @@
-import { IPersistence, BroadcastStoreUpdateMsg } from "~/interfaces";
 import ActionStore from "./ActionStore";
 import DeviceStore from "./DeviceStore";
 import OptionStore from "./OptionStore"
 import Store from "./Store";
+import { IStoreElement } from "~/interfaces";
 
 export { 
     ActionStore,
     DeviceStore,
     OptionStore
 }
-export function StoreProxy<T>(store: Store<T>){
+export function StoreProxy<T extends IStoreElement>(store: Store<T>){
 
     return new Proxy([] as T[], {     
     
@@ -23,9 +23,10 @@ export function StoreProxy<T>(store: Store<T>){
         },
         set: function(target, property, value, reciever){
 
+            console.log(property, value)
             target[property] = value
             // @ts-ignore
-            store.write(value, null)
+            store.write(target, null)
             return true;
         }
     })
