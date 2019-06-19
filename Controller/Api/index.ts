@@ -1,4 +1,4 @@
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
 import cors from 'cors';
 import { Controller } from '../run';
 import { validAction } from '../Store/ActionStore';
@@ -12,17 +12,17 @@ const validStores: ValidStore[] = [
     'device',
     'option'
 ]
-function validBody(req: Request){
+function validBody(req: Request) {
 
-    if(req.params.store === "action") {
+    if (req.params.store === "action") {
 
         return validAction(req.body)
     }
-    else if(req.params.store === "option") {
+    else if (req.params.store === "option") {
 
         return validOption(req.body)
     }
-    else if(req.params.store === "device") {
+    else if (req.params.store === "device") {
 
         return validDevice(req.body)
     }
@@ -31,7 +31,7 @@ function validBody(req: Request){
     }
 }
 
-export default function (ctrl: Controller){
+export default function (ctrl: Controller) {
 
     const api = express();
     api.use(cors({
@@ -39,34 +39,30 @@ export default function (ctrl: Controller){
             /localhost/
         ]
     }))
-    api.use(express.urlencoded({extended: true}));
+    api.use(express.urlencoded({ extended: true }));
     api.use(express.json())
-    
+
     api.delete('/:store', (req, res) => {
 
-        console.log("delete", req.params.store, req.body)
-        if(!validStores.includes(req.params.store)){
+        if (!validStores.includes(req.params.store)) {
 
-            console.log('store invalid delete', req.params.store)
             res.status(404).send()
-            return ;
+            return;
         }
-        if(!validBody(req)){
+        if (!validBody(req)) {
 
-            console.log('body invalid delete', req.body)
             res.status(404).send()
-            return ;
+            return;
         }
 
         const device: IStoreElement = req.body
         let index = ctrl[req.params.store + 's'].findIndex(_device => {
-            
-            return _device._id === device._id 
+
+            return _device._id === device._id
             // && _device.off === device.off
             // && _device.on === device.on
         })
-        console.log(device, index)
-        if(index === -1){
+        if (index === -1) {
 
             res.status(409).send()
         } else {
@@ -76,29 +72,36 @@ export default function (ctrl: Controller){
         }
     })
     api.put('/:store', (req, res) => {
-    
-        console.log(req.body, req.params)
-        if(!validStores.includes(req.params.store)){
 
-            console.log('store invalid delete', req.params.store)
+        if (!validStores.includes(req.params.store)) {
+
             res.status(404).send()
-            return ;
+            return;
         }
-        if(!validBody(req)){
+        if (!validBody(req)) {
 
-            console.log('body invalid put', req.body)
             res.status(404).send()
-            return ;
+            return;
         }
         const device: IStoreElement = req.body
+        
+        while (-1 < ctrl[req.params.store + 's'].findIndex(_device => {
+
+            return _device.name == device.name
+            // && _device.off === device.off
+            // && _device.on === device.on
+        })) {
+
+            console.log('includes', device.name)
+            device.name += '+'
+        }
         let index = ctrl[req.params.store + 's'].findIndex(_device => {
 
-            return _device._id === device._id 
+            return _device._id === device._id
             // && _device.off === device.off
             // && _device.on === device.on
         })
-        console.log(index)
-        if(index === -1){
+        if (index === -1) {
 
             device._id = Date.now() + "";
             ctrl[req.params.store + 's'].push(device)
@@ -112,7 +115,7 @@ export default function (ctrl: Controller){
     api.get('/:store', (req, res) => {
 
         const store = req.params.store
-        if(validStores.includes(store)){
+        if (validStores.includes(store)) {
 
             res.status(200).json(ctrl[req.params.store + 's'])
         } else {
