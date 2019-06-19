@@ -66,7 +66,7 @@ export type ActionTrigger = {
 export interface IAction extends IStoreElement{
 
     name: ActionName
-    device: IDevice
+    device: IDevice | IDevice[]
     method: 'on' | 'off'
     interval?: ActionInterval
     trigger?: ActionTrigger[]
