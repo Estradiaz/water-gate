@@ -5,15 +5,15 @@
                 {{action.name}}
             </v-card-title>
             <v-card-text>
-                <v-layout>
+                <v-layout column>
                     <v-flex>
-                        {{action.device}}
+                        Device: {{action.device.name}}
                     </v-flex>
                     <v-flex>
-                        {{daysOfWeek}}
+                        Wochentage {{daysOfWeek}}
                     </v-flex>
                     <v-flex>
-                        {{hours}}:{{minutes}}
+                        Time: {{hours}}:{{minutes}}
                     </v-flex>
                     <v-flex>
                         {{action.method}}
