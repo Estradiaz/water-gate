@@ -3,6 +3,7 @@ import Api from './Api'
 import WS from 'ws'
 import { spawn } from 'child_process';
 import { execAction } from './Actions';
+import ControllerFS from './FS'
 
 const wsServer = new WS.Server({
     port: 3001
@@ -28,7 +29,10 @@ const ctrl = Controller(function(ctrl: Controller, t: number){
         && action.interval.minute === minutes
     })
     .forEach(execAction)
-}, wsServer)
+}, 
+wsServer,
+new ControllerFS()
+)
 export type Controller = typeof ctrl;
 
 Api(ctrl).listen(3002, 'localhost', () => {
