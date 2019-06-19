@@ -2,7 +2,7 @@ import { RootState, BroadcastStoreUpdateMsg, IAction, IDevice, IOption } from "~
 import { ActionTree, MutationTree } from "vuex";
 import WS from 'ws'
 
-export const state = () => ({
+export const state = ({
 
     actions: [],
     devices: [],
@@ -13,25 +13,23 @@ export const actions: ActionTree<RootState, RootState> = {
 
     init({dispatch}){
 
-        const ws = new WS('ws://localhost:3001', {
-
-        })
+        const ws = new WebSocket('ws://localhost:3001')
         
-        ws
-        .on('open', ( code => {
+        ws.addEventListener('open'
+        , ( code => {
 
             console.log('open')
         }))
-        .on('close', ( code => {
+        ws.addEventListener('close', ( code => {
 
 
         }))
-        .on('message', (msg: string) => {
+        ws.addEventListener('message', (msg) => {
 
             console.log('message', msg)
             try {
 
-                const data: BroadcastStoreUpdateMsg = JSON.parse(msg);
+                const data: BroadcastStoreUpdateMsg = JSON.parse(msg.data);
 
                 console.log(data)
                 switch(data.store){
