@@ -2,6 +2,7 @@ import {describe, test} from 'mocha'
 import {expect} from 'chai'
 import WS from 'ws';
 import axios from 'axios'
+import { IStoreElement } from '~/interfaces';
 
 const mockStoreData = {
 
@@ -88,9 +89,10 @@ Array.from(['device', 'action', 'option']).forEach(store => {
             (async () => {
                 
                 await axios.put(url, mockStoreData[store])
-                let {data: getData1} = await axios.get(url) 
-                await axios.put(url, mockStoreData[store])
-                let {data: getData2} = await axios.get(url)
+                let {data: getData1} = await axios.get(url) as {data: IStoreElement[]}
+                const changed: IStoreElement = {...mockStoreData[store], _id: getData1[0]._id}
+                await axios.put(url, changed)
+                let {data: getData2} = await axios.get(url) as {data: IStoreElement[]}
                 try {
 
                     expect(getData1.length).to.eq(getData2.length)
@@ -124,11 +126,11 @@ Array.from(['device', 'action', 'option']).forEach(store => {
             (async () => {
 
                 let {data: getData1} = await axios.get(url) 
-                await axios.put(url, mockStoreData[store])
+                const placed: IStoreElement = (await axios.put(url, mockStoreData[store])).data
                 let {data: getData2} = await axios.get(url) 
                 await axios.delete(url, {
                     data:
-                    mockStoreData[store]
+                    placed
                 })
                 let {data: getData3} = await axios.get(url) 
                 
@@ -153,13 +155,13 @@ describe('invalid request', ()=> {
     test('random get', (done) => {
         (async ()=>{
 
-            let status = await axios.get(`http://localhost:3002/A`)
-            .then(
-                resp => resp.status
-            )
-            .catch(
-                resp => resp.status
-            )
+            let status;
+            try {
+
+              status  = (await axios.get(`http://localhost:3002/A`)).status
+            } catch (e){
+                status = e.response.status
+            }
             try {
                 expect(status).to.eq(404)
                 done()
@@ -172,13 +174,13 @@ describe('invalid request', ()=> {
     test('random delete', (done) => {
         (async ()=>{
 
-            let status = await axios.delete(`http://localhost:3002/A`)
-            .then(
-                resp => resp.status
-            )
-            .catch(
-                resp => resp.status
-            )
+            let status;
+            try {
+
+              status  = (await axios.delete(`http://localhost:3002/A`)).status
+            } catch (e){
+                status = e.response.status
+            }
             try {
                 expect(status).to.eq(404)
                 done()
@@ -191,14 +193,13 @@ describe('invalid request', ()=> {
     test('random put', (done) => {
         (async ()=>{
 
-            let status 
-            await axios.put(`http://localhost:3002/A`, {})
-            .then(
-                resp => status = resp.status
-            )
-            .catch(
-                resp => status = resp.status
-            )
+            let status;
+            try {
+
+              status  = (await axios.put(`http://localhost:3002/A`, {})).status
+            } catch (e){
+                status = e.response.status
+            }
             try {
                 expect(status).to.eq(404)
                 done()
