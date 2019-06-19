@@ -1,5 +1,18 @@
 import { ValidStore } from "./Controller/Api";
 
+export interface IControllerFS {
+
+    write(elements: IAction[], storeName: 'action'): void
+    write(elements: IDevice[], storeName: 'device'): void
+    write(elements: IStoreElement[], storeName?: string): void
+    append(element: IAction, storeName: 'action'): void
+    append(element: IDevice, storeName: 'device'): void
+    append(element: IStoreElement, storeName?: string): void
+    delete({_id}: {_id: string | number}): void
+    readAllSync(storeName?: string): IAction[] | IDevice[] | IStoreElement[]
+
+}
+
 export type BroadcastStoreUpdateMsg = {
     store: 'action'
     type: 'append'
