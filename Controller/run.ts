@@ -14,7 +14,7 @@ wsServer.on('connection', () => {
 })
 let lastMinute
 const ctrl = Controller(function(ctrl: Controller, t: number){
-    // console.log('action to ground-controll', t - Date.now(), t)
+    console.log('action to ground-controll', t - Date.now(), t)
     const date = new Date();
     let dayOfWeek = date.getDay()
     let hours = date.getHours();
@@ -22,13 +22,15 @@ const ctrl = Controller(function(ctrl: Controller, t: number){
 
     if(lastMinute === minutes) return;
     lastMinute = minutes
-    ctrl.actions
+    console.log(ctrl.actions)
+    let triggerActions = ctrl.actions
     .filter(action => {
         return action.interval && action.interval.daysOfWeek.includes(dayOfWeek)
         && action.interval.hour === hours
         && action.interval.minute === minutes
     })
     .forEach(execAction)
+    console.log(triggerActions)
 }, 
 wsServer,
 new ControllerFS()

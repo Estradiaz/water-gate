@@ -3,32 +3,33 @@ import {expect} from 'chai'
 import WS from 'ws';
 import axios from 'axios'
 import { IStoreElement } from '~/interfaces';
+import { doesNotReject } from 'assert';
 
 const mockStoreData = {
 
     'action': {
         device: {
-            name: "testDevice",
-            on: 'http://localhost:3101/1',
-            off: 'http://localhost:3101/0',
+            name: "D0",
+            on: 'http://localhost:3101/write/0/1',
+            off: 'http://localhost:3101/write/0/0',    
         },
-        name: 'TestAction',
-        method: 'off',
+        name: 'D0 on',
+        method: 'on',
         interval: {
-            daysOfWeek: [1,3,5],
-            hour: 15,
-            minute: 0
+            daysOfWeek: [0,1,2,3,4,5,6],
+            hour: (new Date()).getHours(),
+            minute: (new Date()).getMinutes() + 1
         }
-    },
+    } ,
     'device': {
-        name: "testDevice",
-        on: 'http://localhost:3101/1',
-        off: 'http://localhost:3101/0',
-    },
+        name: "D0",
+        on: 'http://localhost:3101/write/0/1',
+        off: 'http://localhost:3101/write/0/0',
+    } ,
     'option': {
         name: "TestOption",
         value: []
-    }
+    } 
 }
 
 describe(
@@ -210,4 +211,21 @@ describe('invalid request', ()=> {
             }
         })()
     }).timeout(2000)
+})
+describe('test controller action handling 2minutes ', () => {
+
+    it('action trigger 62000ms min later', (done) => {
+        (async () => {
+
+            // await axios.put(`http://localhost:3002/action`, mockStoreData['action'])
+            let read = (await axios('http://localhost:3101/read/0')).data
+            expect(+read).to.equal(0)
+            setTimeout( async () => {
+                let data = (await axios('http://localhost:3101/read/0')).data
+                console.log(data)
+                expect(+data).to.equal(1)
+                done()
+            }, 61000)
+        })()
+    }).timeout(62000)
 })
