@@ -1,31 +1,26 @@
-import { IDevice as IAction } from "~/interfaces";
+import { IDevice } from "~/interfaces";
 import Store from "./Store";
-import { Server } from "ws";
 
-export default class DeviceStore extends Store<IAction>{
-
-    readSync(): IAction | undefined{
-
+export default class DeviceStore extends Store<IDevice>{
+    readSync(): IDevice | undefined{
         return undefined
     }
-    readAllSync(): IAction[]{
-
+    readAllSync(): IDevice[]{
         return []
     }
-    write(values: IAction[]): void{
-
+    write(values: IDevice[]): void{
         super.write(values, 'device');
     } 
-    append(value: IAction): void{
-
+    append(value: IDevice): void{
         super.append(value, 'device');
     }
-    
 }
 export function validDevice(obj: any){
     return (obj 
     && obj.hasOwnProperty('name')
     && obj.hasOwnProperty('on')
-    && obj.hasOwnProperty('off'))
+    && obj.hasOwnProperty('off')
+    && obj.hasOwnProperty('getState')
+    && obj.hasOwnProperty('state'))
     || false
 }
