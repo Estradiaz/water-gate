@@ -18,9 +18,3 @@ it schould be possible to programm actions/ rules, e.g.:
 it as to be **reusable** by any
 
 it has to be **scalable** by any
-
-####dev restriction:
-
-start 7th June '19
-
-stop 11th June '19

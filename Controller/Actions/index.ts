@@ -11,5 +11,8 @@ export function execAction(action: IAction){
             waitables = [Axios.get(action.device[action.method])]
         }
         return Promise.all(waitables);
+    } else {
+
+        return []
     }
 }

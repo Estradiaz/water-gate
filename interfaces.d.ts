@@ -1,4 +1,4 @@
-import { ValidStore } from "./Controller/Api";
+import { ValidStore } from "./Controller/Api/admin";
 
 export interface IControllerFS {
 
@@ -48,7 +48,9 @@ export interface IDevice extends IStoreElement {
 
     name: string
     on: string,
-    off: string
+    off: string,
+    state: boolean,
+    getState: string
     // on(): Promise<boolean>
     // off(): Promise<boolean>
 }
@@ -92,4 +94,12 @@ export type RootState = {
     actions: IAction[]
     devices: IDevice[]
     options: IOption[]
+}
+
+export interface IController {
+    options: IOption[]
+    devices: IDevice[]
+    actions: IAction[]
+    loop(t: number): Promise<any>
+    stop(): void
 }
