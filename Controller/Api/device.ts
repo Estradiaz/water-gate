@@ -5,48 +5,64 @@ import Axios from 'axios';
 
 async function getState(device: IDevice){
 
-    const state = (await Axios.get(device.getState)).data as boolean
-    device.state = state
-    return state
+    try {
+
+        const state = (await Axios.get(device.getState)).data as boolean
+        device.state = state
+        return state
+    } catch(e){
+
+        console.log(e)
+    }
 }
 async function turnOn(device: IDevice){
 
-    const success = (await Axios.get(device.on)).data as boolean
-    device.state = true;
-    return success;
+    try {
+
+        const success = (await Axios.get(device.on)).data as boolean
+        device.state = true;
+    } catch(e){
+        
+        console.log("turnOn", e)
+    }
+    return device;
 }
 async function turnOff(device: IDevice){
 
     const success = (await Axios.get(device.off)).data as boolean
     device.state = false;
-    return success;
+    return device;
 }
 
 export default function (ctrl: Controller){
     const api = express.Router()
-    api.use(express.json())
-    api.use(express.urlencoded({extended: true}))
+    
     // i dont care about method here
-    api.use('/', async (req, res) => {
+    api.put('/', async (req, res) => {
+        console.log(req.url, req.body)
         const {_id:id} = req.body
         if(id === undefined) {
+            console.log("device id undefined")
             res.status(404).end()
             return;
         }
-        const device = ctrl.devices.find(x => x._id === id);
-        if(device === undefined){
+        const deviceIndex = ctrl.devices.findIndex(x => x._id === id);
+        if(ctrl.devices[deviceIndex] === undefined){
+            console.log("device undefined")
             res.status(404).end()
             return ;
         }
         const { state } = req.body as IDevice
-        if(state != await getState(device)){
+        let oldState = await getState(ctrl.devices[deviceIndex])
+        if(state != oldState){
             if(state){
-                turnOff(device)
+                ctrl.devices[deviceIndex] = await turnOn(ctrl.devices[deviceIndex])
             } else {
-                turnOn(device)
+                ctrl.devices[deviceIndex] = await turnOff(ctrl.devices[deviceIndex])
             }
-        } 
-        res.status(202).end() // success will be worked on later
+            
+        }
+        res.status(202).json(ctrl.devices[deviceIndex]).end() // success will be worked on later
     })
     return api
 }

@@ -1,6 +1,6 @@
 import { IPersistence, BroadcastStoreUpdateMsg, IAction, IControllerFS, IStoreElement } from "~/interfaces";
 import { Server } from "ws";
-import { ValidStore } from "../Api";
+import { ValidStore } from "~/Controller/Api/admin";
 import fs from 'Controller/FS'
 
 

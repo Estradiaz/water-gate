@@ -1,5 +1,4 @@
-import express, { Request, Response } from 'express';
-import cors from 'cors';
+import express, { Request } from 'express';
 import { Controller } from '../run';
 import { validAction } from '../Store/ActionStore';
 import { validOption } from '../Store/OptionStore';
@@ -34,13 +33,8 @@ function validBody(req: Request) {
 export default function (ctrl: Controller) {
 
     const api = express.Router();
-    api.use(cors({
-        origin: [
-            /localhost/
-        ]
-    }))
-    api.use(express.urlencoded({ extended: true }));
-    api.use(express.json())
+    
+    
 
     api.delete('/:store', (req, res) => {
 
@@ -92,7 +86,6 @@ export default function (ctrl: Controller) {
             // && _device.on === device.on
         })) {
 
-            console.log('includes', device.name)
             device.name += '+'
         }
         let index = ctrl[req.params.store + 's'].findIndex(_device => {
