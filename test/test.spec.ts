@@ -1,16 +1,16 @@
 import { describe, test } from 'mocha'
 import { expect } from 'chai'
 
+require('dotenv').config()
 
+describe('tests env', () => {
 
-describe('tests test env', () => {
+    test('CTRL PORT is 3001', () => {
 
-    test('1 is 1', () => {
-
-        expect(1).to.eq(1)
+        expect(process.env.CTRL_PORT).to.eq('3001')
     })
-    test('2 is not 1', () => {
+    test('CTRL HOST is localhost', () => {
 
-        expect(2).to.not.eq(1)
+        expect(process.env.CTRL_HOST).to.eq('localhost')
     })
 })

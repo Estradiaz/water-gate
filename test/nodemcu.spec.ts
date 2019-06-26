@@ -5,11 +5,6 @@ import { execSync } from 'child_process';
 
 describe('node mcu', () => {
 
-    it('node mcu should identify itself in netstat', () => {
-
-        let match = execSync('netstat -a').toString().match(/esp-\d{6}/)
-        expect(match).to.be.not.null
-    })
     it('node mcu name should be added to dns', () => {
 
 

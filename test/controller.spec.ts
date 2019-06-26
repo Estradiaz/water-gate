@@ -2,15 +2,19 @@ import {describe, test} from 'mocha'
 import {expect} from 'chai'
 import WS from 'ws';
 import axios from 'axios'
-import { IStoreElement } from '~/interfaces';
+import { IStoreElement, IAction, IDevice, IOption } from '~/interfaces';
+require('dotenv').config()
+
+const HOST = process.env.CTRL_HOST
+const PORT = process.env.CTRL_PORT
 
 const mockStoreData = {
 
     'action': {
         device: {
             name: "testDevice",
-            on: 'http://localhost:3101/1',
-            off: 'http://localhost:3101/0',
+            on: 'http://localhost:3101/1/1',
+            off: 'http://localhost:3101/1/0',    
         },
         name: 'TestAction',
         method: 'off',
@@ -19,28 +23,30 @@ const mockStoreData = {
             hour: 15,
             minute: 0
         }
-    },
+    } as IAction,
     'device': {
         name: "testDevice",
-        on: 'http://localhost:3101/1',
-        off: 'http://localhost:3101/0',
-    },
+        on: 'http://localhost:3101/1/1',
+        off: 'http://localhost:3101/1/0',
+        state: false,
+        getState: 'http://localhost:3101/1'
+    } as IDevice,
     'option': {
         name: "TestOption",
         value: []
-    }
+    } as IOption
 }
 
 describe(
     'test websocket server handling',
     () => {
         test(
-            'ws should connect to port 3001 wsServer within 2000ms', 
+            `ws should connect to ws://${HOST}:${PORT} wsServer within 2000ms`, 
             (done) => {
 
                     new Promise((resolve, reject) => {
     
-                        const ws = new WS('ws://localhost:3001');
+                        const ws = new WS(`ws://${HOST}:${PORT}`);
                         ws.on('open', () => done())
                         ws.on('error', done);
                     })
@@ -52,25 +58,26 @@ describe(
     }
 )
 Array.from(['device', 'action', 'option']).forEach(store => {
-    const url = `http://localhost:3002/${store}/`
+    const url = `http://${HOST}:${PORT}/admin/${store}/`
     
-    describe(`${store} update behaviour`, ()=> {
+    describe(`${store} update behaviour http://${HOST}:${PORT}/admin/${store}/`, ()=> {
 
         test('get should get all current ' + store + 's', (done) => {
             (async () => {
 
                 try{
         
-                    await axios.get(url)
+                    const {data} = await axios.get(url)
+                    console.log('get', data)
                     done();
                 } catch (e){
-        
+                    console.error('get', e)
                     done(e)
                 }
             })()
 
         }).timeout(2000);
-        test(`put /${store} should add ${store}`, (done) => {
+        test(`put ${url} should add ${store}`, (done) => {
             (async () => {
                 let {data: getData1} = await axios.get(url)    
                 await axios.put(url, mockStoreData[store])
@@ -108,7 +115,7 @@ Array.from(['device', 'action', 'option']).forEach(store => {
             (async () => {
             await new Promise((resolve, reject) => {
 
-                const ws = new WS('ws://localhost:3001');
+                const ws = new WS(`ws://${HOST}:${PORT}`);
                 ws.on('open', resolve)
                 ws.on('message', (msg) => {
 
@@ -158,7 +165,7 @@ describe('invalid request', ()=> {
             let status;
             try {
 
-              status  = (await axios.get(`http://localhost:3002/A`)).status
+              status  = (await axios.get(`http://${HOST}:${PORT}/A`)).status
             } catch (e){
                 status = e.response.status
             }
@@ -177,7 +184,7 @@ describe('invalid request', ()=> {
             let status;
             try {
 
-              status  = (await axios.delete(`http://localhost:3002/A`)).status
+              status  = (await axios.delete(`http://${HOST}:${PORT}/A`)).status
             } catch (e){
                 status = e.response.status
             }
@@ -196,7 +203,7 @@ describe('invalid request', ()=> {
             let status;
             try {
 
-              status  = (await axios.put(`http://localhost:3002/A`, {})).status
+              status  = (await axios.put(`http://${HOST}:${PORT}/A`, {})).status
             } catch (e){
                 status = e.response.status
             }
@@ -210,4 +217,78 @@ describe('invalid request', ()=> {
             }
         })()
     }).timeout(2000)
+})
+
+
+describe('should controll state of device', () => {
+
+    const url = `http://${HOST}:${PORT}/device/`
+    const ON = true
+    const OFF = false
+
+    test('turn device on ' + url, (done) => {
+
+        (async () => {
+            const {data: devices} = await axios.get(`http://${HOST}:${PORT}/admin/device`)
+            const device = devices[0]
+            device.state = ON
+        
+            try {
+                
+                const {data} = await axios.put(url, device)
+                expect(!!data.state).to.equal(ON)
+                done()
+            } catch (e) {
+                done(e)
+            }
+        })()
+    } ).timeout(10000)
+
+    test('websocket should notice state change of device[1]', (done) => {
+
+        (async () => {
+            const {data: devices} = await axios.get(`http://${HOST}:${PORT}/admin/device`)
+            const device = devices[1]
+            const ws = new WS(`ws://${HOST}:${PORT}`)
+            ws.on('error', done);
+            let counter = 0
+            ws.on('message', msg => {
+
+                //@ts-ignore
+                const  {store, data} = JSON.parse(msg)
+                //@ts-ignore
+                if(store !== 'device') return;
+                //@ts-ignore
+                const devices = data
+                let _device = devices.find(d => d._id === device._id)
+                // first off 
+                // second on
+                expect(_device.state).to.equal(!!counter)
+                counter++;
+                if(counter >= 1){
+
+                    ws.close();
+                    done()
+                }
+            })
+            device.state = OFF
+            try {
+                
+                const {data} = await axios.put(url, device)
+                expect(!!data.state).to.equal(OFF)
+                
+            } catch (e) {
+                done(e)
+            }
+            device.state = ON
+            try {
+                
+                const {data} = await axios.put(url, device)
+                expect(!!data.state).to.equal(ON)
+                
+            } catch (e) {
+                done(e)
+            }
+        })()
+    }).timeout(20000)
 })
