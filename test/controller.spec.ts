@@ -16,12 +16,12 @@ const mockStoreData = {
             on: 'http://localhost:3101/1/1',
             off: 'http://localhost:3101/1/0',    
         },
-        name: 'TestAction',
-        method: 'off',
+        name: 'D0 on',
+        method: 'on',
         interval: {
-            daysOfWeek: [1,3,5],
-            hour: 15,
-            minute: 0
+            daysOfWeek: [0,1,2,3,4,5,6],
+            hour: (new Date()).getHours(),
+            minute: (new Date()).getMinutes() + 1
         }
     } as IAction,
     'device': {
