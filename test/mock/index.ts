@@ -20,6 +20,8 @@ export const mockStoreData = {
         name: "testDevice",
         on: 'http://localhost:3101/1',
         off: 'http://localhost:3101/0',
+        state: false,
+        getState: 'http://localhost:3101/'
     } as IDevice,
     'option': {
         name: "TestOption",
