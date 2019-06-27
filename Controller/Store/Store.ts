@@ -12,6 +12,7 @@ export default class Store<T extends IStoreElement> implements IPersistence<T>{
         this.wsServer = wsServer
         this.fs = fs
     }
+    load: boolean = true
     broadCast(msg: BroadcastStoreUpdateMsg){
 
         this.wsServer.clients.forEach(client => {
@@ -21,13 +22,12 @@ export default class Store<T extends IStoreElement> implements IPersistence<T>{
     }
     readSync(): T | undefined{
 
-
         // return this.fs.readSync();
         return ;
     }
-    readAllSync(): T[]{
+    readAllSync(store?: ValidStore): T[]{
 
-        return this.fs.readAllSync() as T[];
+        return this.fs.readAllSync(store) as T[];
     }
     write(values: T[], store: ValidStore): void{
 
@@ -50,6 +50,13 @@ export default class Store<T extends IStoreElement> implements IPersistence<T>{
             data: value
         })
         this.fs.append(value, store)
-    } 
+    }
+    delete(id: number, store: ValidStore){
+
+        this.fs.delete({
+            _id: id,
+            name: store
+        })
+    }
 }
 

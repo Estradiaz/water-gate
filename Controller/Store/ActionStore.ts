@@ -21,6 +21,10 @@ export default class ActionStore extends Store<IAction>{
 
         super.append(value, 'action');
     }
+    delete(id: number){
+
+        super.delete(id, 'action')
+    }
     
 }
 
