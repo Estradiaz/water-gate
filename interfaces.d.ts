@@ -4,11 +4,11 @@ export interface IControllerFS {
 
     write(elements: IAction[], storeName: 'action'): void
     write(elements: IDevice[], storeName: 'device'): void
-    write(elements: IStoreElement[], storeName?: string): void
+    write(elements: IStoreElement[], storeName?: ValidStore): void
     append(element: IAction, storeName: 'action'): void
     append(element: IDevice, storeName: 'device'): void
-    append(element: IStoreElement, storeName?: string): void
-    delete({_id}: {_id: string | number}): void
+    append(element: IStoreElement, storeName?: ValidStore): void
+    delete({_id, name}: {_id: string | number, name: ValidStore}): void
     readAllSync(storeName?: string): IAction[] | IDevice[] | IStoreElement[]
 
 }
@@ -87,10 +87,12 @@ export interface IPersistence<T> {
     // read(key: string): Promise<T>
     readSync(key: string): T | undefined
     // readAll(): Promise<T[]>
-    readAllSync(): T[]
+    readAllSync(store?: ValidStore): T[]
 }
 
 export type RootState = {
+    PORT: string,
+    HOST: string,
     actions: IAction[]
     devices: IDevice[]
     options: IOption[]

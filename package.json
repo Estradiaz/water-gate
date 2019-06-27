@@ -30,7 +30,7 @@
   },
   "scripts": {
     "app": "ts-node -P cli.tsconfig.json run.ts",
-    "ctrl": "nodemon -e ts --watch 'Controller/**/*.ts' --exec ts-node -P cli.tsconfig.json ./Controller/run.ts",
+    "ctrl": "ts-node -P cli.tsconfig.json ./Controller/run.ts",
     "mock": "ts-node -P cli.tsconfig.json ./MockDevice/run.ts --PORT 3101",
     "server": "nuxt",
     "dev-debug": "node --debug ./node_modules/.bin/nuxt",

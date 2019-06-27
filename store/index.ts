@@ -1,9 +1,13 @@
 import { RootState, BroadcastStoreUpdateMsg, IAction, IDevice, IOption } from "~/interfaces";
 import { ActionTree, MutationTree } from "vuex";
-import WS from 'ws'
 
-export const state = ({
+// require('dotenv').config()
+// const PORT = process.env.CTRL_PORT
+// const HOST = process.env.CTRL_HOST
+export const state = () => ({
 
+    HOST: 'localhost',
+    PORT: '3001',
     actions: [],
     devices: [],
     options: []
@@ -11,14 +15,13 @@ export const state = ({
 
 export const actions: ActionTree<RootState, RootState> = {
 
-    init({dispatch}){
+    init({dispatch, rootState}){
 
-        const ws = new WebSocket('ws://localhost:3001')
+        const ws = new WebSocket(`ws://${rootState.HOST}:${rootState.PORT}`)
         
         ws.addEventListener('open'
         , ( code => {
 
-            console.log('open')
         }))
         ws.addEventListener('close', ( code => {
 
@@ -26,12 +29,10 @@ export const actions: ActionTree<RootState, RootState> = {
         }))
         ws.addEventListener('message', (msg) => {
 
-            console.log('message', msg)
             try {
 
                 const data: BroadcastStoreUpdateMsg = JSON.parse(msg.data);
 
-                console.log(data)
                 switch(data.store){
 
                     case 'action':

@@ -17,7 +17,6 @@ describe('validates mock device on localhost 3101', () => {
                     Array.from({length: 8}, _ => 0)
                     .map(async (_, index) => (await axios.get(`http://${HOST}:${PORT}/${index+1}/0`)).data)
                 )
-                console.log(datas)
                 datas.forEach(data => {
                     expect(data).to.equal(0)
                 })

@@ -68,10 +68,8 @@ Array.from(['device', 'action', 'option']).forEach(store => {
                 try{
         
                     const {data} = await axios.get(url)
-                    console.log('get', data)
                     done();
                 } catch (e){
-                    console.error('get', e)
                     done(e)
                 }
             })()
