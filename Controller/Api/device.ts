@@ -37,18 +37,16 @@ async function turnOff(device: IDevice){
 export default function (ctrl: Controller){
     const api = express.Router()
     
+    
     // i dont care about method here
     api.put('/', async (req, res) => {
-        console.log(req.url, req.body)
         const {_id:id} = req.body
         if(id === undefined) {
-            console.log("device id undefined")
             res.status(404).end()
             return;
         }
         const deviceIndex = ctrl.devices.findIndex(x => x._id === id);
         if(ctrl.devices[deviceIndex] === undefined){
-            console.log("device undefined")
             res.status(404).end()
             return ;
         }
@@ -60,8 +58,9 @@ export default function (ctrl: Controller){
             } else {
                 ctrl.devices[deviceIndex] = await turnOff(ctrl.devices[deviceIndex])
             }
-            
-        }
+        } 
+        //broadcast
+        await ctrl.updateDeviceState() 
         res.status(202).json(ctrl.devices[deviceIndex]).end() // success will be worked on later
     })
     return api
