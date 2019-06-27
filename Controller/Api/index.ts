@@ -14,7 +14,7 @@ export default function(ctrl: Controller) {
     }))
     server.use(express.json())
     server.use(express.urlencoded({extended: true}))
-    server.use('/admin', admin(ctrl))
-    server.use('/device', device(ctrl))
+    server.use('/controller/admin', admin(ctrl))
+    server.use('/controller/device', device(ctrl))
     return server
 }
