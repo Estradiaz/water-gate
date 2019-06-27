@@ -12,22 +12,24 @@ export default (runActions: (ctrl: IController, runEvent: RunEvent)=> Promise<an
     
     private lastMinute: number = -1
     private loopTimer: number | undefined
-    private updateDeviceState(){
+    updateDeviceState(){
         return Promise.all(
             this.devices.map(async (device) => {
-                device.state = (await Axios.get(device.getState)).data
+                device.state = !!+(await Axios.get(device.getState)).data
+                return device
             })
         )
+
     }
     async loop(t: number){
         let minutes = (new Date()).getMinutes();
         if(this.lastMinute === minutes) return;
         this.lastMinute = minutes
         this.loopTimer = this.loopTimer 
-        || setInterval(() => this.loop(Date.now()), 1000) as any as number
-        await this.updateDeviceState()
+        || setInterval(() => this.loop(Date.now()), 6000) as any as number
         await this.onPreActions(this)
         await runActions(this, this.runEvent(t))
+        await this.updateDeviceState()
         await this.onPostActions(this)
     }
     private runEvent(t: number): RunEvent{
