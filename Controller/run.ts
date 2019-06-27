@@ -6,6 +6,7 @@ import { execAction } from './Actions';
 import ControllerFS from './FS'
 import { IController } from '~/interfaces';
 import http from 'http'
+import nuxtMiddleware from './webServer'
 require('dotenv').config()
 
 
@@ -34,19 +35,16 @@ const ctrl = Controller(
     new ControllerFS()
 )
 const ctrlServer = Api(ctrl)
+nuxtMiddleware().then(nuxt => {
+    ctrlServer.use(nuxt.render)
+})
 function api(req, res){
     ctrlServer(req, res)
 }
-
-
 export type Controller = typeof ctrl;
-
 httpServer.listen(PORT, HOST, () => {
-
-
     console.info(`controller api listens on: http://${HOST}:${PORT}`)
     if(process.env.test){
-
         spawn('cmd', ['WaterGate - Test', '/c', 'test.bat'], {
             shell: true,
             windowsHide: false,
