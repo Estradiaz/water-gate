@@ -6,13 +6,23 @@ export default class DeviceStore extends Store<IDevice>{
         return undefined
     }
     readAllSync(): IDevice[]{
-        return []
+        return super.readAllSync('device')
     }
     write(values: IDevice[]): void{
         super.write(values, 'device');
     } 
     append(value: IDevice): void{
         super.append(value, 'device');
+    }
+    delete(id: number){
+        super.delete(id, 'device')
+    }
+    broadCast({data}){
+        super.broadCast({
+            data,
+            store: 'device',
+            type: "write"
+        })
     }
 }
 export function validDevice(obj: any){
