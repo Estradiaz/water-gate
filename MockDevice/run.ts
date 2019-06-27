@@ -1,5 +1,6 @@
 import express from 'express'
 import minimist from 'minimist'
+// import cors from 'cors'
 
 const {PORT, HOST} = minimist(process.argv.slice(2), {
     string: [
@@ -19,14 +20,15 @@ const {PORT, HOST} = minimist(process.argv.slice(2), {
 const device = express();
 device.use(express.urlencoded({extended: true}))
 device.use(express.json())
+// device.use(cors({
+//     origin: /.*/
+// }))
 let states = {}
 device.get('/:device/:state', (req, res) => {
 
-    console.log(req.url)
     const {device, state} = req.params
     states[device] = !!+state
     res.status(200).json(+!!states[device])
-    console.log('res', +!!states[device])
 })
 
 device.get('/:device', (req, res) => {
