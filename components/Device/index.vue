@@ -18,6 +18,11 @@
                         v-model.lazy="device.off"
                     >
                     </v-text-field>
+                    <v-text-field
+                        label= "state"
+                        v-model.lazy="device.getState"
+                    >
+                    </v-text-field>
                 </v-form>
             </v-card-text>
             <v-card-actions

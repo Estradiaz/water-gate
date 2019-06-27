@@ -92,7 +92,6 @@ export default class ActionNew extends Vue{
     deviceSelection: IDevice | null = null
     set cDevice(value: any){
 
-        console.log(value)
         this.deviceSelection = value
     }
     get cDevice(): any{

@@ -7,7 +7,7 @@
             <v-card-text>
                 <v-layout column>
                     <v-flex>
-                        Device: {{action.device.name}}
+                        Device: {{action.device.name || action.device.map(d => d.name).join(' | ')}}
                     </v-flex>
                     <v-flex>
                         Wochentage {{daysOfWeek}}
@@ -20,6 +20,13 @@
                     </v-flex>
                 </v-layout>
             </v-card-text>
+            <v-card-actions
+            >
+                <v-btn @click="del(action)">
+                    Delete
+                </v-btn>
+                
+            </v-card-actions>
         </v-card>
     </v-flex>
 </template>
@@ -55,6 +62,12 @@ export default Vue.extend({
             || ""
         },
         
+    },
+    methods: {
+        del(action: IAction){
+
+            this.$emit('delete', action)
+        }
     }
 })
 </script>

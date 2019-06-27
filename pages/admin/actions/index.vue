@@ -12,6 +12,7 @@
                         
                         <Action 
                             :action.sync="action"
+                            @delete="del"
                         />
                     </v-flex>
                 </v-layout>
@@ -48,37 +49,37 @@
                                 <v-flex>
                                     
                                     <label for="day0">Montag</label>
-                                    <input type="checkbox" v-model="cWeekDays[0]" id="day0">
+                                    <input type="checkbox" v-model="cWeekDays[1]" id="day0">
                                 </v-flex>
                                 <v-flex >
                                     
                                 <label for="day1">Dienstag</label>
-                                <input type="checkbox" v-model="cWeekDays[1]" id="day1">
+                                <input type="checkbox" v-model="cWeekDays[2]" id="day1">
                                 </v-flex>
                                 <v-flex>
                                     
                                     <label for="day2">Mittwoch</label>
-                                    <input type="checkbox" v-model="cWeekDays[2]" id="day2">
+                                    <input type="checkbox" v-model="cWeekDays[3]" id="day2">
                                 </v-flex>
                                 <v-flex>
                                     
                                     <label for="day3">Donnerstag</label>
-                                    <input type="checkbox" v-model="cWeekDays[3]" id="day3">
+                                    <input type="checkbox" v-model="cWeekDays[4]" id="day3">
                                 </v-flex>
                                 <v-flex>
                                     
                                     <label for="day4">Freitag</label>
-                                    <input type="checkbox" v-model="cWeekDays[4]" id="day4">
+                                    <input type="checkbox" v-model="cWeekDays[5]" id="day4">
                                 </v-flex>
                                 <v-flex>
                                     
                                     <label for="day5">Sammstag</label>
-                                    <input type="checkbox" v-model="cWeekDays[5]" id="day5">
+                                    <input type="checkbox" v-model="cWeekDays[6]" id="day5">
                                 </v-flex>
                                 <v-flex>
                                     
                                     <label for="day6">Sonntag</label>
-                                    <input type="checkbox" v-model="cWeekDays[6]" id="day6">
+                                    <input type="checkbox" v-model="cWeekDays[0]" id="day6">
                                 </v-flex>
                                 <v-flex>
                                     
@@ -116,11 +117,11 @@ import { setInterval, clearInterval } from 'timers';
 
         store.commit(
             'writeAction',
-            (await Axios.get('http://localhost:3002/action')).data
+            (await Axios.get(`http://${store.state.HOST}:${store.state.PORT}/controller/admin/action`)).data
         )
         store.commit(
             'writeDevice',
-            (await Axios.get('http://localhost:3002/device')).data
+            (await Axios.get(`http://${store.state.HOST}:${store.state.PORT}/controller/admin/device`)).data
         )
     },
    
@@ -145,18 +146,25 @@ export default class Actions extends Vue{
         return this.selectedDevices.map(device => device._id)
     }
     set cDevice(id: string[]){
-        console.log(name)
         this.selectedDevices = this.devices.filter(device => id.includes(device._id))
     }
     get actions(){
         return (this.$store.state as RootState).actions
     }
+    set actions(actions: IAction[]){
+
+        this.$store.commit('writeAction', actions)
+    }
     get devices(): IDevice[]{
 
-        console.log("state",this.$store.state)
         return this.$store.state.devices
     }
-    add(){
+    async del(action: IAction){
+
+        let actions = (await Axios.delete(`http://${this.$store.state.HOST}:${this.$store.state.PORT}/controller/admin/action`, {data: action})).data.slice()
+        this.actions = actions
+    }
+    async add(){
 
         if(!this.selectedDevices.length) return ;
         //@ts-ignore
@@ -172,6 +180,8 @@ export default class Actions extends Vue{
             },
             
         }
+        let response = await Axios.put(`http://${this.$store.state.HOST}:${this.$store.state.PORT}/controller/admin/action`, action)
+        this.actions = [...this.actions, response.data]
     }
 }
 </script>

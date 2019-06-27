@@ -13,6 +13,9 @@
                 <v-btn flat color="white" to=/admin/actions>Actions</v-btn>
             </v-toolbar-items>
         </v-toolbar>
-        <nuxt />
+        <v-container grid-list-xl>
+
+            <nuxt />
+        </v-container>
     </v-app>
 </template>

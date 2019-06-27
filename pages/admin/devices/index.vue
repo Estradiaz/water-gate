@@ -32,6 +32,11 @@
                         v-model.lazy="deviceOff"
                     >
                     </v-text-field>
+                    <v-text-field
+                        label= "state"
+                        v-model.lazy="deviceState"
+                    >
+                    </v-text-field>
                 </v-form>
             </v-card-text>
             <v-card-actions
@@ -57,12 +62,9 @@ import { IDevice, RootState } from '../../../interfaces';
         DeviceComponent
     },
     async asyncData({store}){
-
-        const data = (await axios.get('http://localhost:3002/device')).data
-        console.log(data);
         store.commit(
             'writeDevice',
-            data
+            (await axios.get(`http://${store.state.HOST}:${store.state.PORT}/controller/admin/device`)).data
         )
     }
 })
@@ -70,50 +72,52 @@ export default class Devices extends Vue{
     deviceName: string = ""
     deviceOn: string = ""
     deviceOff: string = ""    
+    deviceState: string = ""    
     
     
     get devices(){
 
-        console.log("state",this.$store.state)
         return (this.$store.state as RootState).devices.map(device => Object.assign({}, device))
     }
     set devices(devices: IDevice[]){
 
-        this.$store.commit('writeDevices', devices)
+        this.$store.commit('writeDevice', devices)
     }
 
     async del(device: IDevice){
 
-        console.log("del", device)
-        this.devices = (await axios.delete(`http://localhost:3002/device/`, {data: device})).data.slice()
+        this.devices = (await axios.delete(`http://${this.$store.state.HOST}:${this.$store.state.PORT}/controller/admin/device`, {data: device})).data.slice()
     }
     
     async update(device: IDevice){
-
-        console.log('update', device)
-        axios.put('http://localhost:3002/device/', {
+        axios.put(`http://${this.$store.state.HOST}:${this.$store.state.PORT}/controller/admin/device`, {
             name: device.name, 
             on: device.on,
             off: device.off,
-            _id: device._id
+            _id: device._id,
+            state: device.state,
+            getState: device.getState
         })
     }
     async add(){
 
-        console.log('add')
         let name = this.deviceName
         this.deviceName = "";
         let on = this.deviceOn;
         this.deviceOn = "";
         let off = this.deviceOff;
         this.deviceOff = "";
-        console.log("add", {name, on, off})
+        let getState = this.deviceState;
+        this.deviceState = "";
 
-        let response = await axios.put('http://localhost:3002/device/', {
+        let response = await axios.put(`http://${this.$store.state.HOST}:${this.$store.state.PORT}/controller/admin/device`, {
             name,
             on,
-            off
+            off,
+            state: false,
+            getState
         })
+        this.devices = [...this.devices, response.data]
     }
     
 }
