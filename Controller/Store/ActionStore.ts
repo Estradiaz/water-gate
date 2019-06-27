@@ -10,8 +10,7 @@ export default class ActionStore extends Store<IAction>{
         return undefined
     }
     readAllSync(): IAction[]{
-
-        return []
+        return super.readAllSync('action')
     }
     write(values: IAction[]): void{
 
